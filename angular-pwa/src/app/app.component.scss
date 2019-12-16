@@ -1,0 +1,11 @@
+.content {
+  display: flex;
+  flex-direction: row;
+  &-input {
+    flex: 1;
+  }
+  &-list {
+    margin-top: 3rem;
+    flex: 1;
+  }
+}

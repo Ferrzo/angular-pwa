@@ -1,0 +1,17 @@
+<div class="content">
+  <div class="content-input">
+    <h3>New TODO:</h3>
+    <input
+      type="text"
+      (keyup.enter)="addTodo($event.target.value)"
+    />
+  </div>
+  <div class="content-list">
+    <ul *ngIf="todos.length > 0; else emptyList">
+      <li *ngFor="let task of todos">{{ task }}</li>
+    </ul>
+    <ng-template #emptyList>
+      <span>Empty list</span>
+    </ng-template>
+  </div>
+</div>
