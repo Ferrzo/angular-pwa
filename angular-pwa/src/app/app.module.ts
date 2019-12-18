@@ -12,7 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   imports: [
     BrowserModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+    ServiceWorkerModule.register('sw-master.js', {enabled: environment.production}),
     HttpClientModule
   ],
   providers: [],

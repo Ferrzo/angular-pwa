@@ -27,7 +27,12 @@
               "src/assets",
               "src/manifest.json",
               "src/sw-master.js",
-              "src/sw-sync.js"
+              "src/sw-sync.js",
+              {
+                "glob": "dexie.min.js",
+                "input": "node_modules/dexie/dist/",
+                "output": "./"
+              }
             ],
             "styles": [
               "src/styles.scss"
@@ -45,7 +50,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
               "aot": true,
