@@ -1,35 +1,41 @@
-import { Component, OnInit } from '@angular/core';
-import { ApiService } from './services/api.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { take } from 'rxjs/operators';
+import { TodoService } from './services/todo.service';
+import { Todo } from './todo';
+import { Subscription, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
-  todos: string[] = [];
+export class AppComponent implements OnInit, OnDestroy {
 
-  constructor(private apiService: ApiService) {}
+  public todos: any[] = [];
+  public todoSubscription: Subscription;
 
-  ngOnInit() {
-    this.apiService
-      .getAllTodos()
-      .pipe(take(1))
-      .subscribe(response => {
-        this.todos = response;
-      });
+  todos$: Observable<any[]> = new Observable();
+
+  constructor(private todoService: TodoService) {
   }
 
-  addTodo(newTask: string) {
-    if (newTask) {
-      this.apiService
-        .addNewTodo(newTask)
-        .pipe(take(1))
-        .subscribe(response => {
-          this.todos.push(newTask);
-        });
+  ngOnInit() {
+    this.getTodos();
+  }
+
+  addTodo(value: string) {
+    this.todoService.addTodo({ title: value });
+    this.getTodos();
+  }
+
+  getTodos() {
+    this.todos$ = this.todoService.getAllTodos();
+  }
+
+  ngOnDestroy() {
+    if (this.todoSubscription !== undefined) {
+      this.todoSubscription.unsubscribe();
     }
   }
 }

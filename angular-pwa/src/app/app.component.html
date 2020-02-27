@@ -7,8 +7,8 @@
     />
   </div>
   <div class="content-list">
-    <ul *ngIf="todos.length > 0; else emptyList">
-      <li *ngFor="let task of todos">{{ task }}</li>
+    <ul *ngIf="(todos$ | async); else emptyList">
+      <li *ngFor="let task of (todos$ | async)">{{ task.title }}</li>
     </ul>
     <ng-template #emptyList>
       <span>Empty list</span>

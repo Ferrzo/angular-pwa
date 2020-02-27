@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Req } from '@nestjs/common';
 
 @Controller('todo')
 export class TodoController {
-    private todo: string[] = ['T1', 'T2'];
+    private todo: any[] = [];
     @Get()
     findAll() {
         return this.todo;
@@ -10,6 +10,10 @@ export class TodoController {
 
     @Post()
     async create(@Body() item) {
-        await this.todo.push(item.value);
+        if (Array.isArray(item.value)) {
+            await (this.todo = this.todo.concat(item.value));
+        } else {
+            await this.todo.push(item.value);
+        }
     }
 }
