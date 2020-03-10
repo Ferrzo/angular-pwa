@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Todo, TodoDb } from '../todo';
+import { TodoDb } from '../todo';
 import Dexie from 'dexie';
-import uuidv4 from 'uuid/v4';
 import { OfflineService } from './offline.service';
 import { ApiService } from './api.service';
 import { take } from 'rxjs/operators';
@@ -11,12 +10,11 @@ import { take } from 'rxjs/operators';
 })
 export class TodoService {
 
-  private db: any; // TodoDb;
+  private db: any;
 
   constructor(private offlineService: OfflineService,
-    private apiService: ApiService,
+    private apiService: ApiService
   ) {
-    this.db = new TodoDb();
     this.createIndexedDatabase();
     this.checkConnection();
   }
@@ -29,7 +27,7 @@ export class TodoService {
     return this.apiService.getAllTodos();
   }
 
-  public bulkTodo(todos: any) {
+  public sendBulkTodo(todos: any[]) {
     return this.apiService.addNewTodo(todos);
   }
 
@@ -37,12 +35,7 @@ export class TodoService {
     this.offlineService.connectionChanged
       .subscribe(online => {
         if (online) {
-          console.log('ONLINE ... SEND ONLINE');
-          // online .. send new todos to server + mark them done
           this.sendItemsFromIndexedDb();
-        } else {
-          console.log('OFFLINE ... STORE INDEXDB');
-          // offline .. store in db new todos and marked them done.
         }
       });
   }
@@ -57,7 +50,6 @@ export class TodoService {
 
   addTodo(todo: any) {
     todo.done = false;
-
     // save into the indexedDB if the connection is lost
     if (!this.offlineService.isOnline) {
       this.addToIndexedDb(todo);
@@ -65,6 +57,7 @@ export class TodoService {
       this.postTodo(todo)
         .pipe(take(1))
         .subscribe(res => {
+          // ok saved to server
           console.log(res);
         });
     }
@@ -72,23 +65,15 @@ export class TodoService {
 
   private async addToIndexedDb(todo: any) {
     this.db.todos.add(todo)
-      .then(async () => {
-        const allItems: any[] = await this.db.todos.toArray();
-        console.log('saved in DB, DB is now', allItems);
-      })
       .catch(e => {
-        alert('Error: ' + (e.stack || e));
+        console.log(e);
       });
   }
 
   private async sendItemsFromIndexedDb() {
-    console.log('sending');
-
     const allItems: any[] = await this.db.todos.toArray();
-    this.bulkTodo(allItems).subscribe(res => {
-      console.log(res);
+    this.sendBulkTodo(allItems).subscribe(res => {
       this.db.todos.clear();
     });
-
   }
 }
