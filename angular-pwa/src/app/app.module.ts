@@ -3,17 +3,22 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
+import { TodoListComponent } from './components/todo-list/todo-list.component';
+import { TodoFormComponent } from './components/todo-form/todo-form.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TodoListComponent,
+    TodoFormComponent
   ],
   imports: [
     BrowserModule,
     ServiceWorkerModule.register('ngsw-worker.js'),
-    HttpClientModule
+    HttpClientModule,
+    FlexLayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent]
