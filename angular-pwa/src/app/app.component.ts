@@ -10,7 +10,7 @@ import { Subscription, Observable } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent  {
 
   public todos: any[] = [];
   public todoSubscription: Subscription;
@@ -20,22 +20,5 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private todoService: TodoService) {
   }
 
-  ngOnInit() {
-    this.getTodos();
-  }
 
-  addTodo(value: string) {
-    this.todoService.addTodo({ title: value });
-    this.getTodos();
-  }
-
-  getTodos() {
-    this.todos$ = this.todoService.getAllTodos();
-  }
-
-  ngOnDestroy() {
-    if (this.todoSubscription !== undefined) {
-      this.todoSubscription.unsubscribe();
-    }
-  }
 }
