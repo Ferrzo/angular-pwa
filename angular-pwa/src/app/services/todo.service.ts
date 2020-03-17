@@ -1,51 +1,18 @@
 import { Injectable } from '@angular/core';
-import { TodoDb } from '../todo';
 import Dexie from 'dexie';
 import { OfflineService } from './offline.service';
-import { ApiService } from './api.service';
 import { take } from 'rxjs/operators';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodoService {
-
   private db: any;
 
-  constructor(private offlineService: OfflineService,
-    private apiService: ApiService
-  ) {
+  constructor(private offlineService: OfflineService, private apiService: ApiService) {
     this.createIndexedDatabase();
     this.checkConnection();
-  }
-
-  public postTodo(item: any) {
-    return this.apiService.addNewTodo(item);
-  }
-
-  getAllTodos() {
-    return this.apiService.getAllTodos();
-  }
-
-  public sendBulkTodo(todos: any[]) {
-    return this.apiService.addNewTodo(todos);
-  }
-
-  private checkConnection() {
-    this.offlineService.connectionChanged
-      .subscribe(online => {
-        if (online) {
-          this.sendItemsFromIndexedDb();
-        }
-      });
-  }
-
-  private createIndexedDatabase() {
-    this.db = new Dexie('TodosDatabase');
-    this.db.version(1).stores({
-      todos: 'title,done'
-    });
-    this.db.open().catch(err => console.error(err));
   }
 
   addTodo(todo: any) {
@@ -63,11 +30,38 @@ export class TodoService {
     }
   }
 
+  postTodo(item: any) {
+    return this.apiService.addNewTodo(item);
+}
+
+getAllTodos() {
+    return this.apiService.getAllTodos();
+}
+
+sendBulkTodo(todos: any[]) {
+    return this.apiService.addNewTodo(todos);
+}
+
+  private checkConnection() {
+    this.offlineService.connectionChanged.subscribe(online => {
+      if (online) {
+        this.sendItemsFromIndexedDb();
+      }
+    });
+  }
+
+  private createIndexedDatabase() {
+    this.db = new Dexie('TodosDatabase');
+    this.db.version(1).stores({
+      todos: 'title,done'
+    });
+    this.db.open().catch(err => console.error(err));
+  }
+
   private async addToIndexedDb(todo: any) {
-    this.db.todos.add(todo)
-      .catch(e => {
-        console.log(e);
-      });
+    this.db.todos.add(todo).catch(e => {
+      console.log(e);
+    });
   }
 
   private async sendItemsFromIndexedDb() {

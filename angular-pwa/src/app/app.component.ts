@@ -4,6 +4,7 @@ import { take } from 'rxjs/operators';
 import { TodoService } from './services/todo.service';
 import { Todo } from './todo';
 import { Subscription, Observable } from 'rxjs';
+import { SyncService } from './services/sync.service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,8 @@ export class AppComponent  {
 
   todos$: Observable<any[]> = new Observable();
 
-  constructor(private todoService: TodoService) {
+  constructor(private todoService: TodoService,
+              private syncService: SyncService) {
   }
 
 
