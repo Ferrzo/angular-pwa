@@ -152,5 +152,8 @@
       }
     }
   },
-  "defaultProject": "angular-pwa"
+  "defaultProject": "angular-pwa",
+  "cli": {
+    "analytics": "705c6f64-77a1-45f6-9884-1a7d301639f5"
+  }
 }
