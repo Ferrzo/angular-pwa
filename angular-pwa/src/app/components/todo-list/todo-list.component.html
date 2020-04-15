@@ -1,8 +1,11 @@
-<div>
-  <ul *ngIf="(todos$ | async); else emptyList">
-    <li *ngFor="let task of (todos$ | async)">{{ task.title }}</li>
-  </ul>
+<mat-card>
+  <mat-accordion *ngIf="(todos$ | async); else emptyList">
+    <mat-expansion-panel *ngFor="let task of (todos$ | async)">
+      <mat-expansion-panel-header> <div class="title-large">{{ task.title }}</div></mat-expansion-panel-header>
+      <div>{{ task.description }}</div>
+    </mat-expansion-panel>
+  </mat-accordion>
   <ng-template #emptyList>
     <span>Empty list</span>
   </ng-template>
-</div>
+</mat-card>

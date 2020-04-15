@@ -1,4 +1,17 @@
-<div>
-  <h3>New TODO:</h3>
-  <input type="text" (keyup.enter)="addTodo($event.target.value)" />
-</div>
+<mat-card>
+  <form [formGroup]="formGroup" (ngSubmit)="addTodo(formGroup.value)" class="example-form">
+    <mat-form-field>
+      <mat-label>New Task</mat-label>
+      <input matInput formControlName="name" autocomplete="off">
+      <mat-error *ngIf="!name.valid && name.touched">
+        Name is required
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <textarea matInput autocomplete="off" formControlName="description" matTextareaAutosize matAutosizeMinRows="2"
+        matAutosizeMaxRows="5"></textarea>
+    </mat-form-field>
+    <button mat-flat-button color="primary" type="submit" [disabled]="!formGroup.valid">Add</button>
+  </form>
+</mat-card>

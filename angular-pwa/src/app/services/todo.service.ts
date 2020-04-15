@@ -4,6 +4,7 @@ import Dexie from 'dexie';
 import { OfflineService } from './offline.service';
 import { ApiService } from './api.service';
 import { take } from 'rxjs/operators';
+import { ITodo } from '../models/todo';
 
 @Injectable({
   providedIn: 'root'
@@ -43,12 +44,12 @@ export class TodoService {
   private createIndexedDatabase() {
     this.db = new Dexie('TodosDatabase');
     this.db.version(1).stores({
-      todos: 'title,done'
+      todos: '++id,title,description,done'
     });
     this.db.open().catch(err => console.error(err));
   }
 
-  addTodo(todo: any) {
+  addTodo(todo: ITodo) {
     todo.done = false;
     // save into the indexedDB if the connection is lost
     if (!this.offlineService.isOnline) {
@@ -63,7 +64,7 @@ export class TodoService {
     }
   }
 
-  private async addToIndexedDb(todo: any) {
+  private async addToIndexedDb(todo: ITodo) {
     this.db.todos.add(todo)
       .catch(e => {
         console.log(e);
@@ -71,7 +72,7 @@ export class TodoService {
   }
 
   private async sendItemsFromIndexedDb() {
-    const allItems: any[] = await this.db.todos.toArray();
+    const allItems: ITodo[] = await this.db.todos.toArray();
     this.sendBulkTodo(allItems).subscribe(res => {
       this.db.todos.clear();
     });
